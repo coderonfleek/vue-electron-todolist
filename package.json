@@ -9,7 +9,11 @@
     "dev": "NODE_ENV=DEV vue-cli-service serve & sleep 20 && NODE_ENV=DEV electron electron.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "electron": "^3.0.4",
+    "jwt-decode": "^2.2.0",
+    "keytar": "^4.3.0",
+    "request": "^2.88.0",
     "vue": "^2.5.17"
   },
   "devDependencies": {
