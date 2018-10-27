@@ -12,7 +12,9 @@ function createAppWindow() {
       ? "http://localhost:8080/"
       : `file://${process.cwd()}/dist/index.html`;
 
-  window.loadURL(url);
+  win.loadURL(url);
+
+  win.webContents.openDevTools();
 
   win.on("closed", () => {
     win = null;

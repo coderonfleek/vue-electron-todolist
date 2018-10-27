@@ -4,6 +4,8 @@
     <p>
       I just ran vue in electron baby. Great things are happening already
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
+      <br>
+      <a href="#" @click="logout()">Logout </a>
     </p>
     <h3>Installed CLI Plugins</h3>
     <ul>
@@ -30,10 +32,19 @@
 </template>
 
 <script>
+const { remote } = window.require("electron");
+//const axios = window.require("axios");
+const authService = remote.require("./electron-services/auth-service");
 export default {
   name: "HelloWorld",
   props: {
     msg: String
+  },
+  methods: {
+    logout() {
+      authService.logout();
+      remote.getCurrentWindow().close();
+    }
   }
 };
 </script>
