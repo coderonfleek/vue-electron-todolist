@@ -1,28 +1,92 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Hey Welcome to Your Vue.js App" />
+  <div>
+    <div class="row">
+      <header class="col-md-12">
+        <nav class="navbar navbar-light bg-light">
+          <a class="navbar-brand">Vue TODO List</a>
+          <button class="btn btn-danger my-2 my-sm-0" @click="logout()" type="button">Logout</button>
+        </nav>
+      </header>
+    </div>
+
+    <div class="row" id="fetch-button-row">
+      <div class="col-md-12">
+        <button @click="fetchTodos()" class="btn btn-primary">Fetch Todos </button>
+      </div>
+      <!-- <a href="#" @click="logout()">Logout </a>
+      <br> -->
+
+    </div>
+
+    <div class="row" id="todos-row">
+      <div class="col-md-12">
+        <ul class="list-group">
+          <li class="list-group-item" v-for="todo in todos" :key="todo.id">{{todo.task}}</li>
+
+        </ul>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
+const { remote } = window.require("electron");
+const axios = require("axios"); //This should use require as its frontend
+const authService = remote.require("./electron-services/auth-service");
 export default {
-  name: "app",
-  components: {
-    HelloWorld
+  name: "HelloWorld",
+  data: () => {
+    return {
+      todos: []
+    };
+  },
+  mounted: () => {
+    /* axios
+      .get("http://localhost:1337/todos", {
+        headers: {
+          Authorization: `Bearer ${authService.getAccessToken()}`
+        }
+      })
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        if (error) throw new Error(error);
+      }); */
+  },
+  methods: {
+    logout() {
+      authService.logout();
+      remote.getCurrentWindow().close();
+    },
+    fetchTodos() {
+      console.log(authService.getAccessToken());
+      axios
+        .get("http://localhost:1337/todos", {
+          headers: {
+            Authorization: `Bearer ${authService.getAccessToken()}`
+          }
+        })
+        .then(response => {
+          console.log(response);
+          this.todos = response.data;
+          console.log(this.todos);
+        })
+        .catch(error => {
+          if (error) throw new Error(error);
+        });
+    }
   }
 };
 </script>
 
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+
+#fetch-button-row,
+#todos-row {
+  margin: 10px;
 }
 </style>
